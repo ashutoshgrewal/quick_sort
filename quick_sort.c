@@ -11,40 +11,47 @@ print_arr (int a[], uint64_t size_of_arr)
 }
 
 static void
+swap_elements (int *first, int *second)
+{
+    int temp = *first;
+    *first = *second;
+    *second = temp;  
+}
+
+static void
 quick_sort (int *a, int start_idx, int end_idx)
 {
     int pivot, pivot_idx;
     int iter, swap_idx;
 
-    if (end_idx <= swap_idx) {
+    if (end_idx <= start_idx) {
         //One or zero elements are always sorted.
         return;
     }
 
     //Get a "random" pivot.
-    pivot_idx = (start_idx + end_idx)/2; 
+    pivot_idx = end_idx; 
 
     iter = start_idx;
     pivot = a[pivot_idx];
-    swap_idx = end_idx;
+    swap_idx = end_idx - 1;
     while (iter < swap_idx) {
-        if (a[iter] < pivot) {
+        if (a[iter] <= pivot) {
             //This is in correct order.
             iter++;
         } else {
             //Move element to the right of pivot.
-            int temp = a[swap_idx];
-            a[swap_idx] = a[iter];
-            a[iter] = temp;
+            swap_elements(&a[swap_idx], &a[iter]);
             swap_idx--;
         }
     }
     if (a[iter] < pivot) {
-        pivot_idx = iter;
+        pivot_idx = iter + 1;
     } else {
-        pivot_idx = iter - 1;
+        pivot_idx = iter;
     }
-    quick_sort(a, start_idx, pivot_idx);
+    swap_elements(&a[pivot_idx], &a[end_idx]);
+    quick_sort(a, start_idx, pivot_idx-1);
     quick_sort(a, pivot_idx + 1, end_idx);
 }
 
@@ -55,7 +62,7 @@ sort_arr (int *a, uint64_t size_of_arr) {
 
 int
 main() {
-    int a[] = {1, 11, 93, -3, 72, 4, 11, 23, 300, 21, 31, 2, 13, 73, 1000};
+    int a[] = {3, 3};
 
     uint64_t size_of_arr =  sizeof(a)/sizeof(int);
 
